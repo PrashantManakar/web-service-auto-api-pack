@@ -1,4 +1,4 @@
-package java.com.example.api.steps;
+package com.example.api.steps;
 
 public class MobilePhoneApiSteps {
 }

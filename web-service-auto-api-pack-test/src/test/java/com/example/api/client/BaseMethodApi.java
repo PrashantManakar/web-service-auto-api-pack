@@ -1,4 +1,4 @@
-package java.com.example.api.client;
+package com.example.api.client;
 import com.example.api.model.MobilePhoneItem;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
