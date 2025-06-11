@@ -1,4 +1,4 @@
-package java.com.example.api.model;
+package com.example.api.model;
 
 public class MobilePhoneItem {
     private String id;

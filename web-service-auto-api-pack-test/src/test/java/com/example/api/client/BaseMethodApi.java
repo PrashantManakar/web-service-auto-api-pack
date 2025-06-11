@@ -1,4 +1,4 @@
-package java.com.example.api.client;
+package com.example.api.client;
 import com.example.api.model.MobilePhoneItem;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -10,7 +10,7 @@ public class BaseMethodApi {
     private static BaseMethodApi instance;
 
     private BaseMethodApi() {
-        RestAssured.baseURI = "https://api.restful-api.dev";
+        RestAssured.baseURI = "https://restful-api.dev";
     }
 
     public static BaseMethodApi getInstance() {
@@ -20,7 +20,7 @@ public class BaseMethodApi {
         return instance;
     }
 
-    public Response createObject(MobilePhoneItem item) {
+    public Response createObject(String item) {
         return RestAssured.given()
                 .contentType(JSON)
                 .body(item)
