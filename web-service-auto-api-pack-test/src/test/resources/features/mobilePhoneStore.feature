@@ -19,3 +19,7 @@ Feature: Object API automation
     When the request to list all items is made
     Then a 200 response code is returned
     And the list contains at least 2 items
+
+
+
+
