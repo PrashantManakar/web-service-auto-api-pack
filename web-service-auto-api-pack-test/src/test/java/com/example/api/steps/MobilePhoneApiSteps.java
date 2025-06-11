@@ -5,20 +5,26 @@ import com.example.api.model.MobilePhoneItem;
 import com.example.api.utils.TestContext;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
+import org.assertj.core.api.SoftAssertions;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static io.restassured.path.json.JsonPath.from;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MobilePhoneApiSteps {
-  TestContext context;
+    TestContext context;
     private final BaseMethodApi apiClient;
     ObjectMapper objectMapper = new ObjectMapper();
     private Response response;
@@ -38,17 +44,16 @@ public class MobilePhoneApiSteps {
         for (String id : context.getCreatedObjectIds()) {
             apiClient.deleteObjectById(id)
                     .then()
-                    .statusCode(anyOf(is(200),is(204),is(404)));
+                    .statusCode(anyOf(is(200), is(204), is(404)));
         }
     }
-
 
 
     @Given("a {string} item is created")
     public void a_item_is_created(String name) {
         MobilePhoneItem.Builder builder = new MobilePhoneItem.Builder().name(name);
         context.setCurrentObject(builder.build());
-            }
+    }
 
     @Given("is a {string} CPU model")
     public void is_a_cpu_model(String cpu) {
@@ -93,13 +98,13 @@ public class MobilePhoneApiSteps {
 
     @Then("a {int} response code is returned")
     public void a_response_code_is_returned(int expectedStatus) {
-        assertEquals(response.getStatusCode(),expectedStatus);
+        assertEquals(response.getStatusCode(), expectedStatus);
     }
 
     @Then("a {string} is created")
     public void a_is_created(String expectedName) {
         String actualName = response.jsonPath().getString("name");
-        assertEquals(actualName,expectedName);
+        assertEquals(actualName, expectedName);
     }
 
     @Given("an existing item is created with name {string}")
@@ -125,7 +130,7 @@ public class MobilePhoneApiSteps {
     @Then("the item name is {string}")
     public void the_item_name_is(String expectedName) {
         String actualName = response.jsonPath().getString("name");
-        assertEquals(actualName,expectedName);
+        assertEquals(actualName, expectedName);
     }
 
     @Given("multiple items are created")
@@ -149,11 +154,29 @@ public class MobilePhoneApiSteps {
 
     @Then("the list contains at least {int} items")
     public void the_list_contains_at_least_items(int minCount) {
-        assertThat(response.jsonPath().getList("$").size(), greaterThanOrEqualTo(minCount));
+        ArrayList<Map<String, ?>> jsonAsArrayList = from(response.asString()).get("");
+        assertThat(jsonAsArrayList.size(), equalTo(minCount));
+        // assertThat(response.jsonPath().getList("$").size(), greaterThanOrEqualTo(minCount));
     }
 
+    @And("the below contains mobile phone details:")
+    public void theBelowContainsMobilePhoneDetails(List<Map<String, String>> table) throws JsonProcessingException {
+        SoftAssertions softAssertions = new SoftAssertions();
+        table.forEach(actual -> {
+            validateActualPhoneDetails(response, actual, softAssertions);
+        });
+        softAssertions.assertAll();
+    }
 
-
-
-
+    private void validateActualPhoneDetails(Response response, Map<String, String> actual, SoftAssertions softAssertions) {
+        List<Long> ids = response.path("id");
+        List<String> nameList = response.path("name");
+        ids.forEach(idActual -> {
+            softAssertions.assertThat(actual.get("id")).contains(String.valueOf(idActual));
+        });
+        nameList.forEach(nameActual -> {
+            softAssertions.assertThat(actual.get("name")).contains(nameActual);
+        });
+    }
 }
+

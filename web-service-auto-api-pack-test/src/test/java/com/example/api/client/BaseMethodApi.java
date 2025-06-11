@@ -1,5 +1,5 @@
 package com.example.api.client;
-import com.example.api.model.MobilePhoneItem;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
@@ -29,16 +29,19 @@ public class BaseMethodApi {
 
     public Response getObjectById(String id) {
         return RestAssured.given()
+                .contentType(JSON)
                 .get("/objects/" + id);
     }
 
     public Response listObjects() {
         return RestAssured.given()
+                .contentType(JSON)
                 .get("/objects");
     }
 
     public Response deleteObjectById(String id) {
         return RestAssured.given()
+                .contentType(JSON)
                 .delete("/objects/" + id);
     }
 
