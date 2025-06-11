@@ -13,10 +13,21 @@ public class MobilePhoneItem {
         this.price = builder.price;
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getCpu() { return cpu; }
-    public Double getPrice() { return price; }
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCpu() {
+        return cpu;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
 
     public static class Builder {
         private String id;
@@ -24,7 +35,8 @@ public class MobilePhoneItem {
         private String cpu;
         private Double price;
 
-        public Builder() {}
+        public Builder() {
+        }
 
         public Builder id(String id) {
             this.id = id;
