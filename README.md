@@ -16,7 +16,7 @@ This framework demonstrates a clean, maintainable, and scalable approach to API 
      -- runners
         ----RunCucumberTest.java       # Test runner
 --- src/test/resources
------- features
+  ---- features
       ---- MobilePhoneStore.feature                # Feature file(s)
 
 
