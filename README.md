@@ -3,21 +3,22 @@ This framework demonstrates a clean, maintainable, and scalable approach to API 
 
 ## Project Structure
 
---- src/test/java
- ------ com.example.api
-     -- clients
-         ---- BaseMethodApi.java        # API client encapsulating REST calls (Singleton)
-     -- models
-         ---- MobilePhoneItem.java       # POJO with Builder pattern
-     -- utils
-         ---- TestContext.java           # Shared test state (Context pattern)
-     -- steps
-         ---- MobilePhoneApiSteps.java   # Cucumber step definitions
-     -- runners
-        ----RunCucumberTest.java       # Test runner
---- src/test/resources
-  ---- features
-      ---- MobilePhoneStore.feature                # Feature file(s)
+src/test/java
+ └─ com.example.api
+     ├─ clients
+     │    └─ BaseMethodApi.java        # API client encapsulating REST calls (Singleton)
+     ├─ models
+     │    └─ MobilePhoneItem.java       # POJO with Builder pattern
+     ├─ utils
+     │    └─ TestContext.java           # Shared test state (Context pattern)
+     ├─ steps
+     │    └─ MobilePhoneApiSteps.java   # Cucumber step definitions
+     └─ runners
+          └─ RunCucumberTest.java       # Test runner
+src/test/resources
+ └─ features
+      └─ MobilePhoneStore.feature                # Feature file(s)
+
 
 
 ## How to Use
