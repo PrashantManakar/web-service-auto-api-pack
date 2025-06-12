@@ -152,7 +152,6 @@ public class MobilePhoneApiSteps {
     public void the_list_contains_at_least_items(int minCount) {
         ArrayList<Map<String, ?>> jsonAsArrayList = from(response.asString()).get("");
         assertThat(jsonAsArrayList.size(), equalTo(minCount));
-        // assertThat(response.jsonPath().getList("$").size(), greaterThanOrEqualTo(minCount));
     }
 
     @And("the below contains mobile phone details:")
