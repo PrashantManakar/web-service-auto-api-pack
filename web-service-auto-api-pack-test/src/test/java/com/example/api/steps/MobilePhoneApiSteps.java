@@ -3,8 +3,7 @@ package com.example.api.steps;
 import com.example.api.client.BaseMethodApi;
 import com.example.api.model.MobilePhoneItem;
 import com.example.api.utils.TestContext;
-import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
@@ -21,12 +20,11 @@ import java.util.Map;
 import static io.restassured.path.json.JsonPath.from;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MobilePhoneApiSteps {
-    TestContext context;
+
+    private final TestContext context;
     private final BaseMethodApi apiClient;
-    ObjectMapper objectMapper = new ObjectMapper();
     private Response response;
 
     public MobilePhoneApiSteps() {
@@ -47,7 +45,6 @@ public class MobilePhoneApiSteps {
                     .statusCode(anyOf(is(200), is(204), is(404)));
         }
     }
-
 
     @Given("a {string} item is created")
     public void a_item_is_created(String name) {
@@ -81,12 +78,12 @@ public class MobilePhoneApiSteps {
     }
 
     @When("the request to add the item is made")
-    public void the_request_to_add_the_item_is_made() throws JsonProcessingException {
-        String dtoAsString = objectMapper.writeValueAsString(context.getCurrentObject());
-        response = apiClient.createObject(dtoAsString);
+    public void the_request_to_add_the_item_is_made() {
+        response = apiClient.createObject(context.getCurrentObject());
         response.then().statusCode(200);
         String id = response.jsonPath().getString("id");
         context.addCreatedObjectId(id);
+
         MobilePhoneItem updated = new MobilePhoneItem.Builder()
                 .id(id)
                 .name(context.getCurrentObject().getName())
@@ -98,23 +95,23 @@ public class MobilePhoneApiSteps {
 
     @Then("a {int} response code is returned")
     public void a_response_code_is_returned(int expectedStatus) {
-        assertEquals(response.getStatusCode(), expectedStatus);
+        assertThat(response.getStatusCode(), is(expectedStatus));
     }
 
     @Then("a {string} is created")
     public void a_is_created(String expectedName) {
         String actualName = response.jsonPath().getString("name");
-        assertEquals(actualName, expectedName);
+        assertThat(actualName, equalTo(expectedName));
     }
 
     @Given("an existing item is created with name {string}")
-    public void an_existing_item_is_created_with_name(String name) throws JsonProcessingException {
+    public void an_existing_item_is_created_with_name(String name) {
         MobilePhoneItem item = new MobilePhoneItem.Builder().name(name).build();
-        String dtoAsString = objectMapper.writeValueAsString(item);
-        response = apiClient.createObject(dtoAsString);
+        response = apiClient.createObject(item);
         response.then().statusCode(200);
         String id = response.jsonPath().getString("id");
         context.addCreatedObjectId(id);
+
         MobilePhoneItem created = new MobilePhoneItem.Builder()
                 .id(id)
                 .name(name)
@@ -130,17 +127,16 @@ public class MobilePhoneApiSteps {
     @Then("the item name is {string}")
     public void the_item_name_is(String expectedName) {
         String actualName = response.jsonPath().getString("name");
-        assertEquals(actualName, expectedName);
+        assertThat(actualName, equalTo(expectedName));
     }
 
     @Given("multiple items are created")
-    public void multiple_items_are_created() throws JsonProcessingException {
+    public void multiple_items_are_created() {
         for (int i = 1; i <= 2; i++) {
             MobilePhoneItem item = new MobilePhoneItem.Builder()
                     .name("Item " + i)
                     .build();
-            String dtoAsString = objectMapper.writeValueAsString(item);
-            Response res = apiClient.createObject(dtoAsString);
+            Response res = apiClient.createObject(item);
             res.then().statusCode(200);
             String id = res.jsonPath().getString("id");
             context.addCreatedObjectId(id);
@@ -169,14 +165,12 @@ public class MobilePhoneApiSteps {
     }
 
     private void validateActualPhoneDetails(Response response, Map<String, String> actual, SoftAssertions softAssertions) {
-        List<Long> ids = response.path("id");
+        List<String> ids = response.path("id");
         List<String> nameList = response.path("name");
-        ids.forEach(idActual -> {
-            softAssertions.assertThat(actual.get("id")).contains(String.valueOf(idActual));
-        });
-        nameList.forEach(nameActual -> {
-            softAssertions.assertThat(actual.get("name")).contains(nameActual);
-        });
+        softAssertions.assertThat(ids.contains(actual.get("id"))).isEqualTo(true);
+        softAssertions.assertThat(nameList.contains(actual.get("name"))).isEqualTo(true);
     }
+
+
 }
 

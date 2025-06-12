@@ -18,7 +18,7 @@ Feature: Object API automation
     Given multiple items are created
     When the request to list all items is made
     Then a 200 response code is returned
-    And the list contains at least 2 items
+    And the list contains at least 13 items
     And the below contains mobile phone details:
       | id | name                              |
       | 1  | Google Pixel 6 Pro                |

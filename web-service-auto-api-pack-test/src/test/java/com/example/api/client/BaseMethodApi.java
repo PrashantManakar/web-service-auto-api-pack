@@ -1,5 +1,6 @@
 package com.example.api.client;
 
+import com.example.api.model.MobilePhoneItem;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
@@ -10,7 +11,7 @@ public class BaseMethodApi {
     private static BaseMethodApi instance;
 
     private BaseMethodApi() {
-        RestAssured.baseURI = "https://restful-api.dev";
+        RestAssured.baseURI = "https://api.restful-api.dev";
     }
 
     public static BaseMethodApi getInstance() {
@@ -20,7 +21,7 @@ public class BaseMethodApi {
         return instance;
     }
 
-    public Response createObject(String item) {
+    public Response createObject(MobilePhoneItem item) {
         return RestAssured.given()
                 .contentType(JSON)
                 .body(item)
@@ -29,20 +30,18 @@ public class BaseMethodApi {
 
     public Response getObjectById(String id) {
         return RestAssured.given()
-                .contentType(JSON)
                 .get("/objects/" + id);
     }
 
     public Response listObjects() {
         return RestAssured.given()
-                .contentType(JSON)
                 .get("/objects");
     }
 
     public Response deleteObjectById(String id) {
         return RestAssured.given()
-                .contentType(JSON)
                 .delete("/objects/" + id);
     }
+
 
 }
